@@ -37,9 +37,6 @@ def simular_lancamento_dados():
 num_simulacoes = 1000
 resultados = pd.DataFrame([simular_lancamento_dados() for _ in range(num_simulacoes)], columns=['Resultado'])
 
-# Restante do código permanece o mesmo, exceto o teste de hipótese
-# ...
-
 # Número de vezes que cada possível lançamento ocorreu
 ocorrencias = resultados['Resultado'].value_counts().sort_index()
 for i, count in ocorrencias.items():
