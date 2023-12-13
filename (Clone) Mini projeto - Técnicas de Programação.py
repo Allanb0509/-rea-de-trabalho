@@ -25,40 +25,40 @@
 # COMMAND ----------
 
 import pandas as pd
+import numpy as np
 
 # Simulação de Dados: Crie uma função que simule o lançamento de dois dados de seis lados (valores de 1 a 6). Esta função deve retornar a soma dos resultados dos dados.
 def simular_lancamento_dados():
-    return pd.Series({'Resultado': sum([pd.Series({'Dado1': pd.Series([1, 2, 3, 4, 5, 6]).sample().values[0]}),
-                                        pd.Series({'Dado2': pd.Series([1, 2, 3, 4, 5, 6]).sample().values[0]})])})
+    dado1 = np.random.choice([1, 2, 3, 4, 5, 6])
+    dado2 = np.random.choice([1, 2, 3, 4, 5, 6])
+    return dado1 + dado2
 
 # Múltiplas Simulações: se a função do passo 1 para simular um grande número de jogos de dados (digamos, 1000 jogos). Armazene o resultado de cada jogo em um array NumPy.
 num_simulacoes = 1000
-resultados = pd.DataFrame([simular_lancamento_dados() for _ in range(num_simulacoes)])
+resultados = pd.DataFrame([simular_lancamento_dados() for _ in range(num_simulacoes)], columns=['Resultado'])
 
-# Análise de Dados: Agora, vamos analisar os resultados desses jogos. Calcule e imprima o seguinte:
-media_resultados = resultados['Resultado'].mean()
-maximo_resultado = resultados['Resultado'].max()
-minimo_resultado = resultados['Resultado'].min()
-
-print(f"Média dos resultados: {media_resultados:.2f}")  # A média dos resultados.
-print(f"Lançamento máximo: {maximo_resultado}")  # O lançamento máximo.
-print(f"Lançamento mínimo: {minimo_resultado}")  # O lançamento mínimo.
+# Restante do código permanece o mesmo, exceto o teste de hipótese
+# ...
 
 # Número de vezes que cada possível lançamento ocorreu
 ocorrencias = resultados['Resultado'].value_counts().sort_index()
 for i, count in ocorrencias.items():
     print(f"Lançamento {i}: {count} vezes")
 
-# Teste de Hipótese
+# Teste de Hipótese sem o uso de scipy.stats
 frequencia_esperada = num_simulacoes / 11
-estatistica_chi_quadrado, _ = pd.testing.chisquare(ocorrencias, f_exp=[frequencia_esperada] * len(ocorrencias))
+diferenca_quadratica = ((ocorrencias - frequencia_esperada) ** 2) / frequencia_esperada
+estatistica_chi_quadrado = diferenca_quadratica.sum()
 
 print("\nTeste de Hipótese:")
 print(f"Estatística do Qui-Quadrado: {estatistica_chi_quadrado:.2f}")
 
 # Interpretando os resultados do teste de hipótese
-if estatistica_chi_quadrado < 16.92:  # Valor crítico para 95% de confiança com 10 graus de liberdade
+graus_de_liberdade = len(ocorrencias) - 1
+valor_critico = np.percentile(np.random.chisquare(df=graus_de_liberdade, size=10000), 95)
+if estatistica_chi_quadrado < valor_critico:
     print("Não há evidências para rejeitar a hipótese nula. Os resultados coincidem com um jogo justo.")
 else:
     print("Rejeitamos a hipótese nula. Os resultados não coincidem com um jogo justo.")
+
 
