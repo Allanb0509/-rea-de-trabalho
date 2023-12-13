@@ -37,12 +37,24 @@ def simular_lancamento_dados():
 num_simulacoes = 1000
 resultados = pd.DataFrame([simular_lancamento_dados() for _ in range(num_simulacoes)], columns=['Resultado'])
 
+# Análise de Dados: Agora, vamos analisar os resultados desses jogos. Calcule e imprima o seguinte:
+
+media_resultados = resultados['Resultado'].mean()
+maximo_resultado = resultados['Resultado'].max()
+minimo_resultado = resultados['Resultado'].min()
+
+print(f"Média dos resultados: {media_resultados:.2f}")  # A média dos resultados.
+print(f"Lançamento máximo: {maximo_resultado}")  # O lançamento máximo.
+print(f"Lançamento mínimo: {minimo_resultado}")  # O lançamento mínimo.
+
 # Número de vezes que cada possível lançamento ocorreu
 ocorrencias = resultados['Resultado'].value_counts().sort_index()
 for i, count in ocorrencias.items():
     print(f"Lançamento {i}: {count} vezes")
 
-# Teste de Hipótese sem o uso de scipy.stats
+# Teste de Hipótese: Agora vamos fazer um pouco de teste de hipóteses:
+# Supondo um jogo justo (ou seja, todos os lançamentos são igualmente prováveis), o resultado da sua simulação coincide com essa suposição? Por que sim ou por que não?
+
 frequencia_esperada = num_simulacoes / 11
 diferenca_quadratica = ((ocorrencias - frequencia_esperada) ** 2) / frequencia_esperada
 estatistica_chi_quadrado = diferenca_quadratica.sum()
