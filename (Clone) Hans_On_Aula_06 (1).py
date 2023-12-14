@@ -60,3 +60,28 @@ print(bases_concatenadas_preenchidas.head())
 # COMMAND ----------
 
 # 5. **Verificação de Outliers:** Utilize métodos estatísticos ou gráficos (como boxplots) para identificar a presença de outliers nos dados. Considere se eles são significativos para a análise ou se precisam ser tratados de alguma forma.
+
+import matplotlib.pyplot as plt
+
+bases_concatenadas_preenchidas.boxplot()
+plt.title('Boxplot das colunas')
+plt.xlabel('Grupos')
+plt.ylabel('Valores')
+plt.show()
+
+def identificar_outliers(df, coluna):
+    # Calculando o primeiro e terceiro quartis
+    Q1 = df[coluna].quantile(0.25) #Primeiro Quartil
+    Q3 = df[coluna].quantile(0.75) #Terceiro Quartil
+    
+    # Calculando o IQR (Intervalo Interquartil)
+    IQR = Q3 - Q1
+    
+    # Calculando os limites superior e inferior para identificar os outliers
+    limite_inferior = Q1 - 1.5 * IQR
+    limite_superior = Q3 + 1.5 * IQR
+    
+    # Identificando outliers na coluna especificada
+    outliers = df[(df[coluna] < limite_inferior) | (df[coluna] > limite_superior)]
+    
+    return outliers
